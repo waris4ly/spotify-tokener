@@ -22,8 +22,6 @@ WORKDIR /app
 
 COPY --from=build /build/spotify-tokener /bin/spotify-tokener
 
-ENV PORT=8080
-
 EXPOSE 8080
 
-CMD sh -c "/bin/spotify-tokener -addr 0.0.0.0:${PORT}"
+CMD ["/bin/spotify-tokener", "-addr", "0.0.0.0:8080"]
