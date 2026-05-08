@@ -2,7 +2,7 @@ FROM --platform=$BUILDPLATFORM golang:1.24-alpine AS build
 
 WORKDIR /build
 
-COPY go.mod ./
+COPY go.mod go.sum ./
 
 RUN go mod download
 
@@ -16,10 +16,17 @@ RUN --mount=type=cache,target=/root/.cache/go-build \
     CGO_ENABLED=0 \
     GOOS=$TARGETOS \
     GOARCH=$TARGETARCH \
-    go build -o spotify-tokener github.com/topi314/spotify-tokener
+    go build -ldflags="-s -w" -o spotify-tokener github.com/topi314/spotify-tokener
 
-FROM chromedp/headless-shell
+FROM ghcr.io/chromedp/headless-shell:stable
+
+WORKDIR /app
 
 COPY --from=build /build/spotify-tokener /bin/spotify-tokener
 
+ENV PORT=8080
+
+EXPOSE 8080
+
 ENTRYPOINT ["/bin/spotify-tokener"]
+CMD ["-addr", "0.0.0.0:8080"]
