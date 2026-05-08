@@ -16,7 +16,7 @@ RUN CGO_ENABLED=0 \
     GOARCH=$TARGETARCH \
     go build -ldflags="-s -w" -o spotify-tokener github.com/topi314/spotify-tokener
 
-FROM ghcr.io/chromedp/headless-shell:stable
+FROM chromedp/headless-shell:latest
 
 WORKDIR /app
 
