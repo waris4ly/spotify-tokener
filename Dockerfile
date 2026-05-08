@@ -11,9 +11,7 @@ COPY . .
 ARG TARGETOS
 ARG TARGETARCH
 
-RUN --mount=type=cache,target=/root/.cache/go-build \
-    --mount=type=cache,target=/go/pkg \
-    CGO_ENABLED=0 \
+RUN CGO_ENABLED=0 \
     GOOS=$TARGETOS \
     GOARCH=$TARGETARCH \
     go build -ldflags="-s -w" -o spotify-tokener github.com/topi314/spotify-tokener
@@ -28,5 +26,4 @@ ENV PORT=8080
 
 EXPOSE 8080
 
-ENTRYPOINT ["/bin/spotify-tokener"]
-CMD ["-addr", "0.0.0.0:8080"]
+CMD sh -c "/bin/spotify-tokener -addr 0.0.0.0:${PORT}"
